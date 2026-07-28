@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
-//import Images
+// import Images
 import animatedBefore from './image/before.png';
 import animatedAfter from './image/after.png';
 import inanimateBefore from './image/inanimate_before.png';
@@ -13,17 +13,17 @@ const EXPERIMENTS = {
         id: 'animate',
         label: 'Condition A: Animate Noun',
         sentence: ["The defendant", "examined", "by the lawyer", "turned out", "to be unreliable."],
-        // High cognitive load spike on "by" (Garden Path P600 effect)
+        // High cognitive reading time spike on "by the lawyer" (Garden Path disambiguation effect)
         loads: [100, 170, 220, 140, 130], 
-        explanation: "The noun 'defendant' is animate. The Constraint Satisfaction model dictates that the brain immediately assigns 'defendant' as the agent (the one doing the examining). When the word 'by' appears, this structural assumption collapses, triggering a massive cognitive load spike (P600) as the brain is forced to rebuild the syntactic tree as a passive sentence."
+        explanation: "The noun 'defendant' is animate. The Constraint Satisfaction model dictates that the brain immediately assigns 'defendant' as the agent (the one doing the examining). When the phrase 'by the lawyer' appears, this structural assumption collapses, triggering a massive reading time slowdown as the brain is forced to rebuild the syntactic tree as a passive sentence."
     },
     inanimate: {
         id: 'inanimate',
         label: 'Condition B: Inanimate Noun',
         sentence: ["The evidence", "examined", "by the lawyer", "turned out", "to be unreliable."],
-        // Smooth cognitive load on "by" because animacy constraint prevents the garden path
+        // Smooth reading time profile because animacy constraint prevents the garden path
         loads: [60, 90, 70, 65, 60],
-        explanation: "The noun 'evidence' is inanimate. Because 'evidence' cannot physically examine anything, the animacy cue instantly constrains the brain to build a passive syntactic tree. When the word 'by' appears, it perfectly matches the brain's expectation, resulting in smooth processing with no Garden Path crash."
+        explanation: "The noun 'evidence' is inanimate. Because 'evidence' cannot physically examine anything, the animacy cue instantly constrains the brain to build a passive syntactic tree. When the phrase 'by the lawyer' appears, it perfectly matches the brain's expectation, resulting in smooth processing with no Garden Path crash."
     }
 };
 
@@ -73,7 +73,7 @@ export default function App() {
                 
                 {/* Header */}
                 <div className="text-center space-y-2">
-                    <h1 className="text-3xl font-bold text-slate-100">Constraint Satisfaction Model</h1>
+                    <h1 className="text-3xl font-bold !text-cyan-400">Constraint Satisfaction Model</h1>
                     <p className="text-slate-400">Modeling how noun animacy cues prevent Garden Path sentences in real-time comprehension.</p>
                 </div>
 
@@ -133,21 +133,30 @@ export default function App() {
                         </div>
 
                         {/* Cognitive Load Graph */}
-                        <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg ">
+                        <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg h-[400px]">
                             <h3 className="text-slate-300 font-semibold mb-4 text-center">Real-Time Cognitive Processing Load (Simulated Reading Times)</h3>
                             <div className="w-full h-[300px]">
                                 <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                                    <LineChart data={graphData} margin={{ top: 20, right: 30, left: 10, bottom: 20 }}>
+                                    {/* FIXED: left margin set to 50 for full Y-axis text clearance */}
+                                    <LineChart data={graphData} margin={{ top: 20, right: 30, left: 50, bottom: 20 }}>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                                         <XAxis 
                                             dataKey="word" 
                                             stroke="#94a3b8" 
                                             tick={{fill: '#94a3b8', fontSize: 14}}
                                         />
+                                        {/* FIXED: Y-axis label text positioning */}
                                         <YAxis 
                                             stroke="#94a3b8" 
                                             domain={[0, 300]} 
-                                            label={{ value: 'Reading times in ms', angle: -90, position: 'insideLeft', fill: '#94a3b8', dy:80}}
+                                            label={{ 
+                                                value: 'Reading times in ms', 
+                                                angle: -90, 
+                                                position: 'insideLeft', 
+                                                fill: '#94a3b8',
+                                                style: { textAnchor: 'middle' },
+                                                dx: -10
+                                            }}
                                         />
                                         <Tooltip 
                                             contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569', borderRadius: '8px' }}
@@ -195,9 +204,9 @@ export default function App() {
                                 </p>
                                 <img src={animatedAfter} alt="Lawyer examining" className="mt-2 w-full rounded" />
                                 <div className="mt-6 bg-red-900/20 border border-red-500/50 p-4 rounded-lg animate-pulse">
-                                <div className="text-red-400 font-bold mb-1">⚠️</div>
-                                <div className="text-red-200 text-xs">The brain is re-evaluating the thematic roles of the sentence.</div>
-                            </div>
+                                    <div className="text-red-400 font-bold mb-1">⚠️</div>
+                                    <div className="text-red-200 text-xs">The brain is re-evaluating the thematic roles of the sentence.</div>
+                                </div>
                             </div>
                             )
                         ) : ( 
@@ -217,13 +226,14 @@ export default function App() {
                                 </p>
                                 <img src={inanimateAfter} alt="Lawyer examining evidence" className="mt-2 w-full rounded" />
                                 <div className="mt-6 bg-emerald-900/20 border border-emerald-500/50 p-4 rounded-lg">
-                                <div className="text-emerald-400 font-bold mb-1">✅</div>
-                                <div className="text-emerald-200 text-xs">Animacy cue successfully constrained the syntactic tree. No re-analysis required.</div>
+                                    <div className="text-emerald-400 font-bold mb-1">✅</div>
+                                    <div className="text-emerald-200 text-xs">Animacy cue successfully constrained the syntactic tree. No re-analysis required.</div>
+                                </div>
                             </div>
-                            </div>
-                            ))}
-                            
+                            )
+                        )}
                     </div>
+
                     {/* Research */}
                     <div className="lg:col-span-3 bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg flex flex-col gap-6">
                         <div>
@@ -236,6 +246,7 @@ export default function App() {
                         <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700 flex flex-col gap-4">
                             <h3 className="text-lg font-semibold text-slate-400 uppercase mb-2">Original Study: Trueswell, Tanenhaus, & Garnsey (1994)</h3>
                             <div className="w-24 h-1 bg-cyan-500 rounded mb-4 mx-auto"></div>
+                            
                             <p className="text-base text-left">
                                 Before this study, the dominant theory was Lynn Frazier's <strong>Garden Path Model</strong>. It claims the brain is modular, like a "syntax parser" that constructs the simplest possible grammatical tree. The brain would completely ignore word meanings until after the grammatical structure is built.
                             </p>
@@ -313,7 +324,8 @@ export default function App() {
                             </div>
                         </div>
                     </div>
-                    
+
+                    {/* Reference Card */}
                     <div className="lg:col-span-3 bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg flex flex-col gap-3">
                         <p className="font-semibold text-slate-300 uppercase tracking-wider text-xs">Reference (APA):</p>
                         <p className="pl-6 -indent-6 leading-relaxed text-sm text-slate-300">
@@ -329,7 +341,7 @@ export default function App() {
                             </a>
                         </p>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
