@@ -133,11 +133,11 @@ export default function App() {
                         </div>
 
                         {/* Cognitive Load Graph */}
-                        <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg h-[400px]">
-                            <h3 className="text-slate-300 font-semibold mb-4 text-center">Real-Time Cognitive Processing Load (Simulated P600)</h3>
+                        <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg ">
+                            <h3 className="text-slate-300 font-semibold mb-4 text-center">Real-Time Cognitive Processing Load (Simulated Reading Times)</h3>
                             <div className="w-full h-[300px]">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <LineChart data={graphData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                                    <LineChart data={graphData} margin={{ top: 20, right: 30, left: 10, bottom: 20 }}>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                                         <XAxis 
                                             dataKey="word" 
@@ -147,14 +147,14 @@ export default function App() {
                                         <YAxis 
                                             stroke="#94a3b8" 
                                             domain={[0, 300]} 
-                                            label={{ value: 'Reading times in ms', angle: -90, position: 'insideLeft', fill: '#94a3b8' }}
+                                            label={{ value: 'Reading times in ms', angle: -90, position: 'insideLeft', fill: '#94a3b8', dy:80}}
                                         />
                                         <Tooltip 
                                             contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569', borderRadius: '8px' }}
                                             itemStyle={{ color: '#38bdf8' }}
                                         />
                                         {/* Highlight the critical region */}
-                                        <ReferenceLine x="by" stroke="#64748b" strokeDasharray="3 3" label={{ position: 'top', value: 'Disambiguation Point', fill: '#94a3b8', fontSize: 12 }} />
+                                        <ReferenceLine x="by the lawyer" stroke="#64748b" strokeDasharray="3 3" label={{ position: 'top', value: 'Disambiguation Point', fill: '#94a3b8', fontSize: 12 }} />
                                         <Line 
                                             type="monotone" 
                                             dataKey="load" 
@@ -168,8 +168,7 @@ export default function App() {
                                 </ResponsiveContainer>
                             </div>
                             
-                            <h3 className="text-slate-300 text-sm font-semibold mb-4 text-center">Figure 1:Mean second pass reading times in ms for
-                                sentences with ambiguous verbs.</h3>
+                            <h3 className="text-slate-300 text-sm font-semibold mb-4 text-center">Figure 1: Mean second pass reading times in ms for sentences with ambiguous verbs.</h3>
                         </div>
                     </div>
 
@@ -186,7 +185,7 @@ export default function App() {
                                 <p className="mt-1 text-slate-300">
                                 The brain pictures the <em>defendant examining</em> a document/crime scene.
                                 </p>
-                                <img src={animatedBefore} alt="Defendant examining" className="mt-2 width-full rounded" />
+                                <img src={animatedBefore} alt="Defendant examining" className="mt-2 w-full rounded" />
                             </div>
                             ) : (
                             <div className="text-red-400 text-sm flex flex-col">
@@ -194,10 +193,10 @@ export default function App() {
                                 <p className="mt-1 text-slate-300">
                                 The word "by" forces a role swap! The defendant is the <em>target</em>, and the lawyer is the examiner.
                                 </p>
-                                <img src={animatedAfter} alt="Lawyer examining" className="mt-2 width-full rounded" />
+                                <img src={animatedAfter} alt="Lawyer examining" className="mt-2 w-full rounded" />
                                 <div className="mt-6 bg-red-900/20 border border-red-500/50 p-4 rounded-lg animate-pulse">
                                 <div className="text-red-400 font-bold mb-1">⚠️</div>
-                                <div className="text-red-200 text-xs">Simulated P600 event. The brain is re-evaluating the thematic roles of the sentence.</div>
+                                <div className="text-red-200 text-xs">The brain is re-evaluating the thematic roles of the sentence.</div>
                             </div>
                             </div>
                             )
@@ -208,7 +207,7 @@ export default function App() {
                                 <p className="mt-1 text-slate-300">
                                 Since evidence cannot examine, the brain pictures <em>evidence sitting on a desk waiting to be examined</em>.
                                 </p>
-                                <img src={inanimateBefore} alt="Evidence on desk" className="mt-2 width-full rounded" />
+                                <img src={inanimateBefore} alt="Evidence on desk" className="mt-2 w-full rounded" />
                             </div>
                             ) : (
                             <div className="text-emerald-400 text-sm flex flex-col">
@@ -216,7 +215,7 @@ export default function App() {
                                 <p className="mt-1 text-slate-300">
                                 The word "by" introduces the expected lawyer to examine the evidence. No mental re-framing required!
                                 </p>
-                                <img src={inanimateAfter} alt="Lawyer examining evidence" className="mt-2 width-full rounded" />
+                                <img src={inanimateAfter} alt="Lawyer examining evidence" className="mt-2 w-full rounded" />
                                 <div className="mt-6 bg-emerald-900/20 border border-emerald-500/50 p-4 rounded-lg">
                                 <div className="text-emerald-400 font-bold mb-1">✅</div>
                                 <div className="text-emerald-200 text-xs">Animacy cue successfully constrained the syntactic tree. No re-analysis required.</div>
@@ -229,79 +228,108 @@ export default function App() {
                     <div className="lg:col-span-3 bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg flex flex-col gap-6">
                         <div>
                             <h3 className="text-xl font-bold text-slate-200 mb-2">Results and Conclusion</h3>
-                            <div className="w-220 h-1 bg-cyan-500 rounded mb-4"></div>
                             <p className="text-slate-300 text-sm leading-relaxed">
                                 {currentExp.explanation}
                             </p>
                         </div>
                         
                         <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700 flex flex-col gap-4">
-                            <h3 className="text-lg font-semibold text-slate-400 uppercase mb-2"> Original Study: Trueswell, Tanenhaus, & Garnsey (1994)</h3>
-                                <p className= "text-base text-left">Before this study, the dominant theory was Lynn Frazier's <strong>Garden Path Model</strong>. It claims the brain is modular, like a "syntax parser" that constructs the simplest possible grammatical tree. The brain would completely ignore word meanings until aftger the grammatical structure is built.</p>
-                                <p className= "text-base text-left">Trueswell, Tanenhaus, & Garnsey challenged this theory and purposed the Constraint Satisfaction Model. They argued that the brain is an interactive network that processes multiple sources of information simulatenously to resolve ambiguities.</p>
-                                <p className= "text-base text-left my-6 text-slate-200"> <strong>Aim: </strong> To investigate whether word meaning (semantics) can immediately immediately guide how the brain parses sentence structure, or if the brain relies strictly on syntax first (the <em>Garden Path Model</em>).
-                                </p>
-                                <p className= "text-base text-left space-y-2"><strong>Method: </strong>The original study used <strong>Eye-Tracking</strong> methodology to observe participants' reading patterns and reanalysis processes, millisecond by millisecond.</p>
-                                <h4 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mt-4">
-                                    Experimental Conditions Compared
-                                </h4>
-                                <p className="text-xs font-semibold text-slate-400 tracking-wider mt-4">
-                                    Example stimuli from experiment
-                                </p>
-                                <div className="overflow-x-auto">
+                            <h3 className="text-lg font-semibold text-slate-400 uppercase mb-2">Original Study: Trueswell, Tanenhaus, & Garnsey (1994)</h3>
+                            <div className="w-24 h-1 bg-cyan-500 rounded mb-4 mx-auto"></div>
+                            <p className="text-base text-left">
+                                Before this study, the dominant theory was Lynn Frazier's <strong>Garden Path Model</strong>. It claims the brain is modular, like a "syntax parser" that constructs the simplest possible grammatical tree. The brain would completely ignore word meanings until after the grammatical structure is built.
+                            </p>
+                            
+                            <p className="text-base text-left">
+                                Trueswell, Tanenhaus, & Garnsey challenged this theory and proposed the Constraint Satisfaction Model. They argued that the brain is an interactive network that processes multiple sources of information simultaneously to resolve ambiguities.
+                            </p>
+                            
+                            <p className="text-base text-left my-6 text-slate-200">
+                                <strong>Aim: </strong>To investigate whether word meaning (semantics) can immediately guide how the brain parses sentence structure, or if the brain relies strictly on syntax first (the <em>Garden Path Model</em>).
+                            </p>
+                            
+                            <p className="text-base text-left space-y-2">
+                                <strong>Method: </strong>The original study used <strong>Eye-Tracking</strong> methodology to observe participants' reading patterns and reanalysis processes, millisecond by millisecond.
+                            </p>
+                            
+                            <h4 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mt-4">
+                                Experimental Conditions Compared
+                            </h4>
+                            
+                            <p className="text-xs font-semibold text-slate-400 tracking-wider">
+                                Example stimuli from experiment
+                            </p>
+                            
+                            <div className="overflow-x-auto">
                                 <table className="w-full text-left border-collapse text-xs text-slate-300">
                                     <thead>
-                                    <tr className="border-b border-slate-700 text-slate-400 font-semibold uppercase tracking-wider">
-                                        <th className="py-2.5 px-3">Verb type</th>
-                                        <th className="py-2.5 px-3">Noun type</th>
-                                        <th className="py-2.5 px-3">Clause type</th>
-                                        <th className="py-2.5 px-3">Example</th>
-                                    </tr>
+                                        <tr className="border-b border-slate-700 text-slate-400 font-semibold uppercase tracking-wider">
+                                            <th className="py-2.5 px-3">Verb type</th>
+                                            <th className="py-2.5 px-3">Noun type</th>
+                                            <th className="py-2.5 px-3">Clause type</th>
+                                            <th className="py-2.5 px-3">Example</th>
+                                        </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-800/60">
-                                    {/* Ambiguous - Animate */}
-                                    <tr>
-                                        <td rowSpan={4} className="py-2.5 px-3 font-semibold text-cyan-400 align-top border-r border-slate-800">
-                                        Ambiguous
-                                        </td>
-                                        <td rowSpan={2} className="py-2.5 px-3 font-medium align-top border-r border-slate-800">
-                                        Animate
-                                        </td>
-                                        <td className="py-2.5 px-3 text-slate-400">Reduced</td>
-                                        <td className="py-2.5 px-3 italic">
-                                        The defendant examined by the lawyer turned out to be unreliable.
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="py-2.5 px-3 text-slate-400">Unreduced</td>
-                                        <td className="py-2.5 px-3 italic">
-                                        The defendant that was examined by the lawyer turned out to be unreliable.
-                                        </td>
-                                    </tr>
-
-                                    {/* Ambiguous - Inanimate */}
-                                    <tr>
-                                        <td rowSpan={2} className="py-2.5 px-3 font-medium align-top border-r border-slate-800">
-                                        Inanimate
-                                        </td>
-                                        <td className="py-2.5 px-3 text-slate-400">Reduced</td>
-                                        <td className="py-2.5 px-3 italic">
-                                        The evidence examined by the lawyer turned out to be unreliable.
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="py-2.5 px-3 text-slate-400">Unreduced</td>
-                                        <td className="py-2.5 px-3 italic">
-                                        The evidence that was examined by the lawyer turned out to be unreliable.
-                                        </td>
-                                    </tr> 
+                                        <tr>
+                                            <td rowSpan={4} className="py-2.5 px-3 font-semibold text-cyan-400 align-top border-r border-slate-800">
+                                                Ambiguous
+                                            </td>
+                                            <td rowSpan={2} className="py-2.5 px-3 font-medium align-top border-r border-slate-800">
+                                                Animate
+                                            </td>
+                                            <td className="py-2.5 px-3 text-slate-400">Reduced</td>
+                                            <td className="py-2.5 px-3 italic">
+                                                The defendant examined by the lawyer turned out to be unreliable.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className="py-2.5 px-3 text-slate-400">Unreduced</td>
+                                            <td className="py-2.5 px-3 italic">
+                                                The defendant that was examined by the lawyer turned out to be unreliable.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td rowSpan={2} className="py-2.5 px-3 font-medium align-top border-r border-slate-800">
+                                                Inanimate
+                                            </td>
+                                            <td className="py-2.5 px-3 text-slate-400">Reduced</td>
+                                            <td className="py-2.5 px-3 italic">
+                                                The evidence examined by the lawyer turned out to be unreliable.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td className="py-2.5 px-3 text-slate-400">Unreduced</td>
+                                            <td className="py-2.5 px-3 italic">
+                                                The evidence that was examined by the lawyer turned out to be unreliable.
+                                            </td>
+                                        </tr> 
                                     </tbody>
                                 </table>
-                                <p className= "text-base text-left space-y-2"><strong>Original Study Conclusion: </strong> Human language processing system in constraint-based and interactivem meaning semantic information such as animacy is used immediately to guide sunatactic choices rather than in a separate later stage.</p>
-                                </div>
+                                
+                                <p className="text-base text-left space-y-2 mt-4">
+                                    <strong>Original Study Conclusion: </strong>The human language processing system is constraint-based and interactive, meaning semantic information such as animacy is used immediately to guide syntactic choices rather than in a separate, later stage.
+                                </p>
+                            </div>
                         </div>
                     </div>
-
+                    
+                    <div className="lg:col-span-3 bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg flex flex-col gap-3">
+                        <p className="font-semibold text-slate-300 uppercase tracking-wider text-xs">Reference (APA):</p>
+                        <p className="pl-6 -indent-6 leading-relaxed text-sm text-slate-300">
+                            Trueswell, J. C., Tanenhaus, M. K., & Garnsey, S. M. (1994). Semantic influences on parsing: Use of thematic role information in syntactic ambiguity resolution. <span className="italic">Journal of Memory and Language</span>, <span className="italic">33</span>(3), 285–318.{' '}
+                            <a href="https://doi.org/10.1006/jmla.1994.1014" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">
+                                https://doi.org/10.1006/jmla.1994.1014
+                            </a>
+                        </p>
+                        <p className="text-xs text-slate-400 mt-1">
+                            Direct PDF Access:{' '}
+                            <a href="https://web.stanford.edu/class/psych205/papers/TrueswellTanenhausGarnsey94.pdf" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-cyan-300 underline">
+                                Stanford University Class Repository
+                            </a>
+                        </p>
+                    </div>
+                    
                 </div>
             </div>
         </div>
