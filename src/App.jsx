@@ -222,7 +222,7 @@ export default function App() {
                             <div className="text-emerald-400 text-sm flex flex-col">
                                 ✅ <strong>Seamless Integration:</strong>
                                 <p className="mt-1 text-slate-300">
-                                The word "by" introduces the expected lawyer to examine the evidence. No mental re-framing required!
+                                The word "by" introduces the expected lawyer to examine the evidence.
                                 </p>
                                 <img src={inanimateAfter} alt="Lawyer examining evidence" className="mt-2 w-full rounded" />
                                 <div className="mt-6 bg-emerald-900/20 border border-emerald-500/50 p-4 rounded-lg">
